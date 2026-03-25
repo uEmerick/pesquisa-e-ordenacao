@@ -210,8 +210,97 @@ public class Lista
         fim = null;
     }
 
-//    public quickSortSemPivo()
-//    {
-//
-//    }
+    public No posicionarNo(int pos)
+    {
+        No aux = inicio;
+        for(int i=0; i<pos; i++)
+            aux = aux.getProx();
+        return aux;
+    }
+
+    public void quickSortSemPivo()
+    {
+        quickSP(this.inicio, this.fim);
+    }
+
+    private static void quickSP(No inicio, No fim)
+    {
+        if(inicio != null && inicio != fim)
+        {
+            No auxI = inicio;
+            No auxJ = fim;
+            boolean flag = true;
+           int temp;
+
+            while(auxI != auxJ)
+            {
+                if(flag)
+                    while(auxI != auxJ && auxI.getValor() <= auxJ.getValor())
+                        auxI = auxI.getProx();
+                else
+                    while(auxI != auxJ && auxJ.getValor() >= auxI.getValor())
+                        auxJ = auxJ.getAnt();
+
+                if(auxI != auxJ)
+                {
+                    temp = auxI.getValor();
+                    auxI.setValor(auxJ.getValor());
+                    auxJ.setValor(temp);
+                    flag = !flag;
+                }
+            }
+            if(inicio != auxI && inicio != auxI.getAnt())
+                quickSP(inicio, auxI.getAnt());
+            if(fim != auxI && fim != auxI.getProx())
+                quickSP(auxI.getProx(), fim);
+        }
+    }
+
+    public void quickSortComPivo()
+    {
+        quickCp(0, tamanhoLista() - 1);
+    }
+
+    public void quickCp(int ini, int fim)
+    {
+        int i=ini, j=fim, aux, pivo;
+
+        No auxIni = posicionarNo(ini);
+        No auxFim = posicionarNo(fim);
+        No auxPivo = posicionarNo((ini+fim)/2);
+
+        pivo = auxPivo.getValor();
+
+        while(i < j)
+        {
+            while(i < j && auxIni.getValor() < pivo)
+            {
+                auxIni = auxIni.getProx();
+                i++;
+            }
+            while(i < j && auxFim.getValor() > pivo)
+            {
+                auxFim = auxFim.getAnt();
+                j--;
+            }
+
+            //troca
+            if(i <= j)
+            {
+                aux = auxIni.getValor();
+                auxIni.setValor(auxFim.getValor());
+                auxFim.setValor(aux);
+
+                auxIni = auxIni.getProx();
+                i++;
+                auxFim = auxFim.getAnt();
+                j--;
+            }
+        }
+
+        if(ini < j)
+            quickCp(ini, j);
+        if(fim > i)
+            quickCp(i, fim);
+    }
 }

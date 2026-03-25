@@ -16,28 +16,75 @@ public class Main {
         for(int i=0; i<vetor.length; i++)
             System.out.print(vetor[i] + " ");
 
-        quickSortSemPivo(vetor);
+        quickSortSemPivo(vetor, TL);
+
+        System.out.println("\nVetor depois da ordenação:");
+        for(int i=0; i<vetor.length; i++)
+            System.out.print(vetor[i] + " ");
     }
 
-    public static void quickSortSemPivo(int[] vetor) 
+    public static void quickSortSemPivo(int[] vetor, int TL)
     {
-        int temp;
-        
-        for(int j=vetor.length-1; j>0; j--)
+        quickSP(vetor, 0,TL-1);
+    }
+
+    public static void quickSP(int vet[], int inicio, int fim)
+    {
+        int i = inicio, j = fim, aux;
+        boolean flag = true;
+
+        while(i < j)
         {
-            for(int i=0; i < j; i++)
+            if(flag)
+                while(i < j && vet[i] <= vet[j])
+                    i++;
+
+            else
             {
-                if(vetor[i] > vetor[j])
-                {
-                    temp = vetor[i];
-                    vetor[i] = vetor[j];
-                    vetor[j] = temp;
-                }
+                while(i < j && vet[j] >= vet[i])
+                    j--;
+            }
+
+            aux = vet[i];
+            vet[i] = vet[j];
+            vet[j] = aux;
+
+            flag = !flag;
+        }
+        if(inicio < i-1)
+            quickSP(vet, inicio, i-1);
+        if(j+1 < fim)
+            quickSP(vet, j+1, fim);
+    }
+
+    public static void quickSortComPivo(int[] vetor, int TL)
+    {
+        quickSP(vetor, 0,TL-1);
+    }
+
+    public static void quickCP(int vet[], int inicio, int fim)
+    {
+        int i = inicio, j = fim, pivo = vet[(inicio+fim)/2], aux;
+
+        while(i <= j)
+        {
+            while(vet[i] < pivo)
+                i++;
+
+            while(vet[j] > pivo)
+                j--;
+
+            if (i <= j)
+            {
+                aux = vet[i];
+                vet[i] = vet[j];
+                vet[j] = aux;
+                i++; j--;
             }
         }
-
-        System.out.println("\nVetor após a ordenação:");
-        for(int k=0; k<vetor.length; k++)
-            System.out.print(vetor[k] + " ");
+        if(inicio < j)
+            quickCP(vet, inicio, j);
+        if(i < fim)
+            quickCP(vet, i, fim);
     }
 }
